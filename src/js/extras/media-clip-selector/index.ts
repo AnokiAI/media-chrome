@@ -17,6 +17,17 @@ function lockBetweenZeroAndOne(num: number): number {
 
 template.innerHTML = `
   <style>
+    :host {
+      --_media-range-padding: var(--media-range-padding, var(--media-control-padding, 10px));
+      display: inline-flex;
+      align-items: center;
+      ${
+        /* Don't horizontal align w/ justify-content! #container can go negative on the x-axis w/ small width. */ ''
+      }
+      vertical-align: middle;
+      box-sizing: border-box;
+    }
+
     #selectorContainer {
       background-color: transparent;
       height: 44px;
@@ -54,19 +65,25 @@ template.innerHTML = `
     #selection {
       display: flex;
       z-index: ${Z['200']};
-      width: 25%;
+      width: 100%;
       height: 100%;
       align-items: center;
     }
 
     #leftTrim {
-      width: 25%;
+      width: 0%;
     }
 
     #spacer {
       flex: 1;
       background-color: cornflowerblue;
       height: 40%;
+    }
+
+    #wrapper {
+      padding-left: var(--media-range-padding-left, var(--_media-range-padding));
+      padding-right: var(--media-range-padding-right, var(--_media-range-padding));
+      width: 100%;
     }
 
     #thumbnailContainer {
@@ -207,8 +224,40 @@ class MediaClipSelector extends globalThis.HTMLElement {
     return +this.getAttribute(MediaUIAttributes.MEDIA_DURATION);
   }
 
+  set mediaDuration(value: number) {
+    const attrName = MediaUIAttributes.MEDIA_DURATION;
+    const nextNumericValue = +value;
+
+   // Treat null, undefined, and NaN as "nothing values", so unset if value is currently set.
+   if (value == null || Number.isNaN(nextNumericValue)) {
+     if (this.hasAttribute(attrName)) {
+       this.removeAttribute(attrName);
+     }
+     return;
+   }
+
+    // if (getNumericAttr(el, attrName, undefined) === nextNumericValue) return;
+    this.setAttribute(MediaUIAttributes.MEDIA_DURATION, `${nextNumericValue}`);
+  }
+
   get mediaCurrentTime(): number {
     return +this.getAttribute(MediaUIAttributes.MEDIA_CURRENT_TIME);
+  }
+
+  set mediaCurrentTime(value: number) {
+    const attrName = MediaUIAttributes.MEDIA_CURRENT_TIME
+    const nextNumericValue = +value;
+
+    // Treat null, undefined, and NaN as "nothing values", so unset if value is currently set.
+    if (value == null || Number.isNaN(nextNumericValue)) {
+      if (this.hasAttribute(attrName)) {
+        this.removeAttribute(attrName);
+      }
+      return;
+    }
+
+    // if (getNumericAttr(el, attrName, undefined) === nextNumericValue) return;
+    this.setAttribute(MediaUIAttributes.MEDIA_CURRENT_TIME, `${nextNumericValue}`);
   }
 
   /*
