@@ -1,6 +1,6 @@
 import { MediaChromeButton } from '../../media-chrome-button.js';
 import { globalThis, document } from '../../utils/server-safe-globals.js';
-import { getNumericAttr, setNumericAttr } from '../../utils/element-utils.js';
+import { getNumericAttr, setNumericAttr, getStringAttr } from '../../utils/element-utils.js';
 import { MediaUIEvents, MediaUIAttributes } from '../../constants.js';
 import { tooltipLabels,verbs } from '../../labels/labels.js';
 import { getBooleanAttr, setBooleanAttr } from '../../utils/element-utils.js';
@@ -46,21 +46,9 @@ const tooltipContent = /*html*/ `
 `;
 
 const updateAriaLabel = (el: any): void => {
-  const label = el.mediaPaused ? verbs.PLAY() : verbs.PAUSE();
+  const label = el.mediaClipEdge;
   el.setAttribute('aria-label', label);
 };
-
-/*const updateAriaAttributes = (el: MediaClipButton): void => {
-  const isPausedOrNotLive = el.mediaPaused || !el.mediaTimeIsLive;
-  const label = isPausedOrNotLive ? verbs.SEEK_LIVE() : verbs.PLAYING_LIVE();
-
-  el.setAttribute('aria-label', label);
-
-  isPausedOrNotLive
-    ? el.removeAttribute('aria-disabled')
-    : el.setAttribute('aria-disabled', 'true');
-};
-*/
 
 /**
  * @attr {string} mediacurrenttime - (read-only) Set to the media current time.
@@ -74,8 +62,10 @@ class MediaClipSyncCurrentButton extends MediaChromeButton {
   static get observedAttributes(): string[] {
     return [
 		  ...super.observedAttributes,
+		  MediaClipButtonAttributes.MEDIA_CLIP_EDGE,
 		  MediaUIAttributes.MEDIA_CURRENT_TIME,
-			MediaUIAttributes.MEDIA_PAUSED
+			MediaUIAttributes.MEDIA_PAUSED,
+			MediaUIAttributes.MEDIA_PREVIEW_TIME,
 		];
   }
 
@@ -93,7 +83,7 @@ class MediaClipSyncCurrentButton extends MediaChromeButton {
     oldValue: string | null,
     newValue: string | null
   ): void {
-		if (attrName === MediaUIAttributes.MEDIA_PAUSED) {
+		if (attrName === MediaClipButtonAttributes.MEDIA_CLIP_EDGE) {
       updateAriaLabel(this);
     }
     super.attributeChangedCallback(attrName, oldValue, newValue);
@@ -111,6 +101,17 @@ class MediaClipSyncCurrentButton extends MediaChromeButton {
   }
 
 	/**
+   *
+   */
+  get mediaPreviewTime(): number | undefined {
+    return getNumericAttr(this, MediaUIAttributes.MEDIA_PREVIEW_TIME);
+  }
+
+  set mediaPreviewTime(value: number | undefined) {
+    setNumericAttr(this, MediaUIAttributes.MEDIA_PREVIEW_TIME, value);
+  }
+
+	/**
    * Is the media paused
    */
   get mediaPaused(): boolean {
@@ -121,20 +122,22 @@ class MediaClipSyncCurrentButton extends MediaChromeButton {
     setBooleanAttr(this, MediaUIAttributes.MEDIA_PAUSED, value);
   }
 
-	/*
+  get mediaClipEdge(): string | undefined {
+    return getStringAttr(this, MediaClipButtonAttributes.MEDIA_CLIP_EDGE);
+  }
+
   handleClick(): void {
     this.dispatchEvent(
-      new globalThis.CustomEvent('mediacliprequest', {
+      new globalThis.CustomEvent('mediaclipsyncrequest', {
         composed: true,
         bubbles: true,
 				detail: {
-					startTime: this.clipStartTime,
-				  endTime: this.clipEndTime,
+					name: this.mediaClipEdge,
+					value: this.mediaCurrentTime,
 				},
       })
     );
   }
-	*/
 }
 
 if (!globalThis.customElements.get('media-clip-sync-current-button')) {

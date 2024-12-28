@@ -37,7 +37,7 @@ template.innerHTML = `
     }
 
     #timeline {
-      width: 100%;
+			width: var(--media-range-track-width, 100%);
       height: 10px;
       background: #ccc;
       position: absolute;
@@ -138,14 +138,16 @@ template.innerHTML = `
   <div id="thumbnailContainer">
     <media-preview-thumbnail></media-preview-thumbnail>
   </div>
-  <div id="selectorContainer">
-    <div id="timeline"></div>
-    <div id="playhead"></div>
-    <div id="leftTrim"></div>
-    <div id="selection">
-      <div id="startHandle"></div>
-      <div id="spacer"></div>
-      <div id="endHandle"></div>
+  <div id="wrapper">
+    <div id="selectorContainer">
+      <div id="timeline"></div>
+      <div id="playhead"></div>
+      <div id="leftTrim"></div>
+      <div id="selection">
+        <div id="startHandle"></div>
+        <div id="spacer"></div>
+        <div id="endHandle"></div>
+      </div>
     </div>
   </div>
 `;
@@ -174,6 +176,9 @@ class MediaClipSelector extends globalThis.HTMLElement {
   spacerLast: HTMLElement;
   initialX: number;
   thumbnailPreview: HTMLElement;
+
+  startTime: number;
+  endTime: number;
 
   _clickHandler: () => void;
   _dragStart: () => void;
@@ -218,7 +223,14 @@ class MediaClipSelector extends globalThis.HTMLElement {
     globalThis.window?.addEventListener('mousemove', this._drag, false);
 
     this.enableThumbnails();
+
+    this.startTime = 0;
+    this.endTime = this.mediaDuration || -1;
   }
+
+	connectedCallback() {
+    this.endTime = this.mediaDuration || -1;
+	}
 
   get mediaDuration(): number {
     return +this.getAttribute(MediaUIAttributes.MEDIA_DURATION);
@@ -369,10 +381,37 @@ class MediaClipSelector extends globalThis.HTMLElement {
     this.dispatchUpdate();
   }
 
+  updatePlayHandle(name: string, playHead: number): void {
+    const rangeRect = this.wrapper.getBoundingClientRect();
+    const fullTimelineWidth = rangeRect.width;
+		if (this.endTime == -1) {
+      this.endTime = this.mediaDuration
+		}
+    console.log("xxxxxxxxxxx", playHead, this.startTime, this.endTime)
+    if (name === "start") {
+      const percent = lockBetweenZeroAndOne(playHead/this.mediaDuration)
+      this.leftTrim.style.width = `${percent * 100}%`;
+      const selectionPercent = lockBetweenZeroAndOne(
+        (this.endTime - playHead) / this.mediaDuration
+      );
+      this.setSelectionWidth(selectionPercent, fullTimelineWidth);
+    }
+    if (name === "end") {
+      const selectionPercent = lockBetweenZeroAndOne(
+        (playHead - this.startTime) / fullTimelineWidth
+      );
+      this.setSelectionWidth(selectionPercent, fullTimelineWidth);
+    }
+    this.dispatchUpdate();
+  }
+
   dispatchUpdate(): void {
+    const detail = this.getCurrentClipBounds();
     const updateEvent = new CustomEvent('update', {
-      detail: this.getCurrentClipBounds(),
+      detail: detail, //this.getCurrentClipBounds(),
     });
+    this.startTime = detail.startTime;
+    this.endTime = detail.endTime;
     this.dispatchEvent(updateEvent);
   }
 

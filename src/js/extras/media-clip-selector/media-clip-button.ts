@@ -30,18 +30,6 @@ slotTemplate.innerHTML = /*html*/ `
   <slot name="icon">${clipIcon}</slot>
 `;
 
-/*const updateAriaAttributes = (el: MediaClipButton): void => {
-  const isPausedOrNotLive = el.mediaPaused || !el.mediaTimeIsLive;
-  const label = isPausedOrNotLive ? verbs.SEEK_LIVE() : verbs.PLAYING_LIVE();
-
-  el.setAttribute('aria-label', label);
-
-  isPausedOrNotLive
-    ? el.removeAttribute('aria-disabled')
-    : el.setAttribute('aria-disabled', 'true');
-};
-*/
-
 /**
  * @attr {string} mediaduration - (read-only) Set to the media duration.
  * @attr {string} clipStartTime - 
