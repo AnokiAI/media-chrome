@@ -1,6 +1,8 @@
 import { globalThis, document } from '../../utils/server-safe-globals.js';
 import { MediaUIEvents, MediaUIAttributes } from '../../constants.js';
 
+//export * as constants from './constants.js';
+
 const template: HTMLTemplateElement = document.createElement('template');
 
 const HANDLE_W = 8;
@@ -387,7 +389,6 @@ class MediaClipSelector extends globalThis.HTMLElement {
 		if (this.endTime == -1) {
       this.endTime = this.mediaDuration
 		}
-    console.log("xxxxxxxxxxx", playHead, this.startTime, this.endTime)
     if (name === "start") {
       const percent = lockBetweenZeroAndOne(playHead/this.mediaDuration)
       this.leftTrim.style.width = `${percent * 100}%`;
