@@ -19,8 +19,6 @@ const previewIcon = `
 const slotTemplate = document.createElement('template');
 slotTemplate.innerHTML = /*html*/ `
   <style>
-	   :host { --media-tooltip-display: none; }
-
 		 .animate-spin {
 		   animation: spin 1s linear infinite;
 		 }
@@ -39,7 +37,7 @@ slotTemplate.innerHTML = /*html*/ `
 `;
 
 const tooltipContent = /*html*/ `
-  <slot name="tooltip-preview">preview</slot>
+  <slot name="tooltip-preview">preview the clip</slot>
 `;
 
 const updateAriaLabel = (el: any): void => {
@@ -68,7 +66,7 @@ class MediaClipPreviewButton extends MediaChromeButton {
   }
 
   constructor(options: object = {}) {
-    super({ slotTemplate, ...options });
+    super({ slotTemplate, tooltipContent, ...options });
   }
 
   connectedCallback(): void {

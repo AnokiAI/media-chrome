@@ -24,8 +24,6 @@ const clipIcon = `
 const slotTemplate = document.createElement('template');
 slotTemplate.innerHTML = /*html*/ `
   <style>
-    :host { --media-tooltip-display: none; }
-
     :host([${Attributes.DISABLED}]) {
       pointer-events: none;
       opacity: 0.5;
@@ -37,6 +35,10 @@ slotTemplate.innerHTML = /*html*/ `
   </style>
 
   <slot name="icon">${clipIcon}</slot>
+`;
+
+const tooltipContent = /*html*/ `
+  Save to backend
 `;
 
 /**
@@ -64,7 +66,7 @@ class MediaClipButton extends MediaChromeButton {
   }
 
   constructor(options: object = {}) {
-    super({ slotTemplate, ...options });
+    super({ slotTemplate, tooltipContent, ...options });
 		setBooleanAttr(this, 'disabled', true);
     this.addEventListener('click', this.handleClick.bind(this));
   }

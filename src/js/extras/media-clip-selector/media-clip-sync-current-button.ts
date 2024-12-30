@@ -70,7 +70,7 @@ class MediaClipSyncCurrentButton extends MediaChromeButton {
   }
 
   constructor(options: object = {}) {
-    super({ slotTemplate, ...options });
+    super({ slotTemplate, tooltipContent, ...options });
   }
 
   connectedCallback(): void {
