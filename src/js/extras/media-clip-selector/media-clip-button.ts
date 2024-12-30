@@ -8,6 +8,7 @@ import { getBooleanAttr, setBooleanAttr } from '../../utils/element-utils.js';
 export const Attributes = {
   MEDIA_CLIP_START_TIME: 'mediaclipstarttime',
   MEDIA_CLIP_END_TIME : 'mediaclipendtime',	
+  DISABLED: 'disabled',
 };
 
 const clipIcon = `
@@ -23,8 +24,16 @@ const clipIcon = `
 const slotTemplate = document.createElement('template');
 slotTemplate.innerHTML = /*html*/ `
   <style>
-  :host { --media-tooltip-display: none; }
-  
+    :host { --media-tooltip-display: none; }
+
+    :host([${Attributes.DISABLED}]) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    :host([${Attributes.DISABLED}]) svg {
+      fill: grey;
+    }
   </style>
 
   <slot name="icon">${clipIcon}</slot>
@@ -40,17 +49,24 @@ slotTemplate.innerHTML = /*html*/ `
  * @cssproperty --media-cliplive-button-indicator-color - `fill` and `color` of live button icon.
  */
 class MediaClipButton extends MediaChromeButton {
+	/* an indicator to show if clipStartTime, or clipendTime is changed */
+	#changed : boolean = false;
+	/* an indicator to show if the clip range is persisted */
+	#saved : boolean = false;
   static get observedAttributes(): string[] {
     return [
 		  ...super.observedAttributes,
 		  MediaUIAttributes.MEDIA_DURATION,
 			Attributes.MEDIA_CLIP_START_TIME,
-			Attributes.MEDIA_CLIP_END_TIME
+			Attributes.MEDIA_CLIP_END_TIME,
+      Attributes.DISABLED,
 		];
   }
 
   constructor(options: object = {}) {
     super({ slotTemplate, ...options });
+		setBooleanAttr(this, 'disabled', true);
+    this.addEventListener('click', this.handleClick.bind(this));
   }
 
   connectedCallback(): void {
@@ -73,22 +89,27 @@ class MediaClipButton extends MediaChromeButton {
     oldValue: string | null,
     newValue: string | null
   ): void {
-		if (attrName === Attributes.MEDIA_CLIP_START_TIME) {
+		if (attrName === Attributes.MEDIA_CLIP_START_TIME && newValue != "0") {
 		  this.clipStartTime = getNumericAttr(        
         this,                                     
         Attributes.MEDIA_CLIP_START_TIME,         
         0                                         
-      );        
+      );
+			this.#changed = true;
 		}
-		if (attrName === Attributes.MEDIA_CLIP_END_TIME) {
+		if (attrName === Attributes.MEDIA_CLIP_END_TIME && newValue != "0") {
 		  this.clipEndTime = getNumericAttr(        
         this,                                     
         Attributes.MEDIA_CLIP_END_TIME,         
         0                                         
-      );        
+      );
+			this.#changed = true;
 		}
     super.attributeChangedCallback(attrName, oldValue, newValue);
     //updateAriaAttributes(this);
+		if (this.#changed) {
+		  setBooleanAttr(this, 'disabled', false);
+		}
   }
 
 	/**
@@ -121,9 +142,15 @@ class MediaClipButton extends MediaChromeButton {
     setNumericAttr(this, Attributes.MEDIA_CLIP_END_TIME, value);
   }
 
-  handleClick(): void {
-    // If we're live and not paused, don't allow seek to live
-    //if (!this.mediaPaused && this.mediaTimeIsLive) return;
+  handleClick(event): void {
+    if (this.hasAttribute(Attributes.DISABLED)) {
+      event.preventDefault();
+      event.stopPropagation();
+			return;
+    }
+
+		// reset
+		this.#changed = false;
 		setBooleanAttr(this, 'disabled', true);
 
 		/*
