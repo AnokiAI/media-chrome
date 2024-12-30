@@ -1,5 +1,7 @@
 import { globalThis, document } from '../../utils/server-safe-globals.js';
 import { MediaUIEvents, MediaUIAttributes } from '../../constants.js';
+import { formatTime } from '../../utils/time.js';
+import '../../media-preview-time-display.js';
 
 //export * as constants from './constants.js';
 
@@ -122,6 +124,44 @@ template.innerHTML = `
       animation: fadeIn ease 0.5s;
     }
 
+		#preview-rail {
+			display: flex;
+      align-content: center;
+      justify-content: center;
+      width: 100%;
+      position: relative;
+      left: 0;
+      bottom: 50%;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+		::slotted(media-preview-time-display),
+		#mediaTimeDisplayClipStart,
+		#mediaTimeDisplayClipEnd {
+      font-size: var(--media-font-size, 13px);
+			color: var(--media-text-color, var(--media-primary-color, rgb(238 238 238)));
+      line-height: 17px;
+      min-width: 0;
+      ${
+        /* delay changing these CSS props until the preview box transition is ended */ ''
+      }
+      transition: min-width 0s, border-radius 0s;
+      transition-delay: calc(var(--media-preview-transition-delay-out, 0s) + var(--media-preview-transition-duration-out, .25s));
+      background: var(--media-preview-time-background, var(--_preview-background));
+      border-radius: var(--media-preview-time-border-radius,
+        var(--media-preview-border-radius) var(--media-preview-border-radius)
+        var(--media-preview-border-radius) var(--media-preview-border-radius));
+      padding: var(--media-preview-time-padding, 3.5px 9px);
+      margin: var(--media-preview-time-margin, 0);
+      text-shadow: var(--media-preview-time-text-shadow, 0 0 4px rgb(0 0 0 / .75));
+      transform: translateX(min(
+        max(calc(50% - var(--_box-width) / 2),
+        calc(var(--_box-shift, 0))),
+        calc(var(--_box-width) / 2 - 50%)
+      ));
+    }
+
     @keyframes fadeIn {
       0% {
         /* transform-origin: bottom center; */
@@ -146,9 +186,17 @@ template.innerHTML = `
       <div id="playhead"></div>
       <div id="leftTrim"></div>
       <div id="selection">
-        <div id="startHandle"></div>
+        <div id="startHandle">
+				  <div id="preview-rail">
+				    <slot id="mediaTimeDisplayClipStart"></slot>
+					</div>
+				</div>
         <div id="spacer"></div>
-        <div id="endHandle"></div>
+        <div id="endHandle">
+				  <div id="preview-rail">
+				    <slot id="mediaTimeDisplayClipEnd"></slot>
+					</div>
+				</div>
       </div>
     </div>
   </div>
@@ -178,6 +226,8 @@ class MediaClipSelector extends globalThis.HTMLElement {
   spacerLast: HTMLElement;
   initialX: number;
   thumbnailPreview: HTMLElement;
+  mediaTimeDisplayClipStart: HTMLElement;
+  mediaTimeDisplayClipEnd: HTMLElement;
 
   startTime: number;
   endTime: number;
@@ -208,6 +258,8 @@ class MediaClipSelector extends globalThis.HTMLElement {
     this.spacerMiddle = this.shadowRoot.querySelector('#spacerMiddle');
     this.endHandle = this.shadowRoot.querySelector('#endHandle');
     this.spacerLast = this.shadowRoot.querySelector('#spacerLast');
+    this.mediaTimeDisplayClipStart = this.shadowRoot.querySelector('#mediaTimeDisplayClipStart');
+    this.mediaTimeDisplayClipEnd = this.shadowRoot.querySelector('#mediaTimeDisplayClipEnd');
 
     this._clickHandler = this.handleClick.bind(this);
     this._dragStart = this.dragStart.bind(this);
@@ -413,6 +465,9 @@ class MediaClipSelector extends globalThis.HTMLElement {
     });
     this.startTime = detail.startTime;
     this.endTime = detail.endTime;
+
+		this.mediaTimeDisplayClipStart.textContent = formatTime(this.startTime);
+		this.mediaTimeDisplayClipEnd.textContent = formatTime(this.endTime);
     this.dispatchEvent(updateEvent);
   }
 
