@@ -41,8 +41,8 @@ slotTemplate.innerHTML = /*html*/ `
 `;
 
 const tooltipContent = /*html*/ `
-  <slot name="tooltip-right">sync to end time</slot>
-  <slot name="tooltip-left">sync to start time</slot>
+  <slot name="tooltip-right">Sync to end time</slot>
+  <slot name="tooltip-left">Sync to start time</slot>
 `;
 
 const updateAriaLabel = (el: any): void => {
