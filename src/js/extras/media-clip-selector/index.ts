@@ -41,7 +41,7 @@ template.innerHTML = `
     }
 
     #timeline {
-			width: var(--media-range-track-width, 100%);
+      width: var(--media-range-track-width, 100%);
       height: 10px;
       background: #ccc;
       position: absolute;
@@ -124,8 +124,8 @@ template.innerHTML = `
       animation: fadeIn ease 0.5s;
     }
 
-		#preview-rail {
-			display: flex;
+    #preview-rail {
+      display: flex;
       align-content: center;
       justify-content: center;
       width: 100%;
@@ -135,12 +135,15 @@ template.innerHTML = `
       pointer-events: none;
       will-change: transform;
     }
+    #endHandle > #preview-rail {
+      bottom: 100%;
+    }
 
-		::slotted(media-preview-time-display),
-		#mediaTimeDisplayClipStart,
-		#mediaTimeDisplayClipEnd {
+    ::slotted(media-preview-time-display),
+      #mediaTimeDisplayClipStart,
+      #mediaTimeDisplayClipEnd {
       font-size: var(--media-font-size, 13px);
-			color: var(--media-text-color, var(--media-primary-color, rgb(238 238 238)));
+      color: var(--media-text-color, var(--media-primary-color, rgb(238 238 238)));
       line-height: 17px;
       min-width: 0;
       ${
@@ -187,16 +190,16 @@ template.innerHTML = `
       <div id="leftTrim"></div>
       <div id="selection">
         <div id="startHandle">
-				  <div id="preview-rail">
-				    <slot id="mediaTimeDisplayClipStart"></slot>
-					</div>
-				</div>
+          <div id="preview-rail">
+            <slot id="mediaTimeDisplayClipStart"></slot>
+          </div>
+        </div>
         <div id="spacer"></div>
         <div id="endHandle">
-				  <div id="preview-rail">
-				    <slot id="mediaTimeDisplayClipEnd"></slot>
-					</div>
-				</div>
+          <div id="preview-rail">
+            <slot id="mediaTimeDisplayClipEnd"></slot>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -282,9 +285,9 @@ class MediaClipSelector extends globalThis.HTMLElement {
     this.endTime = this.mediaDuration || -1;
   }
 
-	connectedCallback() {
+  connectedCallback() {
     this.endTime = this.mediaDuration || -1;
-	}
+  }
 
   get mediaDuration(): number {
     return +this.getAttribute(MediaUIAttributes.MEDIA_DURATION);
@@ -294,13 +297,13 @@ class MediaClipSelector extends globalThis.HTMLElement {
     const attrName = MediaUIAttributes.MEDIA_DURATION;
     const nextNumericValue = +value;
 
-   // Treat null, undefined, and NaN as "nothing values", so unset if value is currently set.
-   if (value == null || Number.isNaN(nextNumericValue)) {
-     if (this.hasAttribute(attrName)) {
-       this.removeAttribute(attrName);
-     }
-     return;
-   }
+    // Treat null, undefined, and NaN as "nothing values", so unset if value is currently set.
+    if (value == null || Number.isNaN(nextNumericValue)) {
+      if (this.hasAttribute(attrName)) {
+        this.removeAttribute(attrName);
+      }
+      return;
+    }
 
     // if (getNumericAttr(el, attrName, undefined) === nextNumericValue) return;
     this.setAttribute(MediaUIAttributes.MEDIA_DURATION, `${nextNumericValue}`);
@@ -374,7 +377,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
   setSelectionWidth(selectionPercent: number, fullTimelineWidth: number): void {
     let percent = selectionPercent;
 
-    const minWidthPx = HANDLE_W * 3;
+    const minWidthPx = HANDLE_W * -1;
     const minWidthPercent = lockBetweenZeroAndOne(
       minWidthPx / fullTimelineWidth
     );
@@ -438,9 +441,9 @@ class MediaClipSelector extends globalThis.HTMLElement {
   updatePlayHandle(name: string, playHead: number): void {
     const rangeRect = this.wrapper.getBoundingClientRect();
     const fullTimelineWidth = rangeRect.width;
-		if (this.endTime == -1) {
+    if (this.endTime == -1) {
       this.endTime = this.mediaDuration
-		}
+    }
     if (name === "start") {
       const percent = lockBetweenZeroAndOne(playHead/this.mediaDuration)
       this.leftTrim.style.width = `${percent * 100}%`;
@@ -451,7 +454,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
     }
     if (name === "end") {
       const selectionPercent = lockBetweenZeroAndOne(
-        (playHead - this.startTime) / fullTimelineWidth
+        (playHead - this.startTime) / this.mediaDuration
       );
       this.setSelectionWidth(selectionPercent, fullTimelineWidth);
     }
@@ -466,8 +469,8 @@ class MediaClipSelector extends globalThis.HTMLElement {
     this.startTime = detail.startTime;
     this.endTime = detail.endTime;
 
-		this.mediaTimeDisplayClipStart.textContent = formatTime(this.startTime);
-		this.mediaTimeDisplayClipEnd.textContent = formatTime(this.endTime);
+    this.mediaTimeDisplayClipStart.textContent = formatTime(this.startTime);
+    this.mediaTimeDisplayClipEnd.textContent = formatTime(this.endTime);
     this.dispatchEvent(updateEvent);
   }
 
