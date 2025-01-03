@@ -374,7 +374,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
   setSelectionWidth(selectionPercent: number, fullTimelineWidth: number): void {
     let percent = selectionPercent;
 
-    const minWidthPx = HANDLE_W * 3;
+    const minWidthPx = HANDLE_W * -1;
     const minWidthPercent = lockBetweenZeroAndOne(
       minWidthPx / fullTimelineWidth
     );
@@ -438,9 +438,9 @@ class MediaClipSelector extends globalThis.HTMLElement {
   updatePlayHandle(name: string, playHead: number): void {
     const rangeRect = this.wrapper.getBoundingClientRect();
     const fullTimelineWidth = rangeRect.width;
-		if (this.endTime == -1) {
+    if (this.endTime == -1) {
       this.endTime = this.mediaDuration
-		}
+    }
     if (name === "start") {
       const percent = lockBetweenZeroAndOne(playHead/this.mediaDuration)
       this.leftTrim.style.width = `${percent * 100}%`;
@@ -451,7 +451,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
     }
     if (name === "end") {
       const selectionPercent = lockBetweenZeroAndOne(
-        (playHead - this.startTime) / fullTimelineWidth
+        (playHead - this.startTime) / this.mediaDuration
       );
       this.setSelectionWidth(selectionPercent, fullTimelineWidth);
     }
