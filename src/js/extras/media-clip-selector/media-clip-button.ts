@@ -38,7 +38,7 @@ slotTemplate.innerHTML = /*html*/ `
 `;
 
 const tooltipContent = /*html*/ `
-  Save to backend
+  Clip Video
 `;
 
 /**

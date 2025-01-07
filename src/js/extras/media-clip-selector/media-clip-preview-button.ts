@@ -37,7 +37,7 @@ slotTemplate.innerHTML = /*html*/ `
 `;
 
 const tooltipContent = /*html*/ `
-  <slot name="tooltip-preview">preview the clip</slot>
+  <slot name="tooltip-preview">Preview the clip</slot>
 `;
 
 const updateAriaLabel = (el: any): void => {
