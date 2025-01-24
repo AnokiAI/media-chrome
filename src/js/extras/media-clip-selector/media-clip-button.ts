@@ -38,7 +38,7 @@ slotTemplate.innerHTML = /*html*/ `
 `;
 
 const tooltipContent = /*html*/ `
-  Clip Video
+  Submit Clip Search
 `;
 
 /**
