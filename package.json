@@ -1,6 +1,6 @@
 {
   "name": "@AnokiAI/media-chrome",
-  "version": "4.3.0",
+  "version": "4.3.1-1",
   "description": "Custom elements (web components) for making audio and video player controls that look great in your website or app.",
   "author": "@muxinc",
   "license": "MIT",
@@ -121,8 +121,7 @@
     "serve": "wet serve --cors --livereload --redirect :examples/vanilla/ --log-level error"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AnokiAI/media-chrome.git"
+    "url": "https://github.com/AnokiAI/media-chrome.git"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.2",

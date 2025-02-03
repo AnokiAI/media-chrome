@@ -438,6 +438,18 @@ class MediaClipSelector extends globalThis.HTMLElement {
     this.dispatchUpdate();
   }
 
+  setClipMarkers(startTime: number, endTime: number): void {
+    const rangeRect = this.wrapper.getBoundingClientRect();
+    const fullTimelineWidth = rangeRect.width;
+    const startFraction = lockBetweenZeroAndOne(startTime/this.mediaDuration)
+    this.leftTrim.style.width = `${startFraction * 100}%`;
+    const selectionFraction = lockBetweenZeroAndOne(
+      (endTime - startTime) / this.mediaDuration
+    );
+    this.setSelectionWidth(selectionFraction, fullTimelineWidth);
+    this.dispatchUpdate();
+}
+
   updatePlayHandle(name: string, playHead: number): void {
     const rangeRect = this.wrapper.getBoundingClientRect();
     const fullTimelineWidth = rangeRect.width;
