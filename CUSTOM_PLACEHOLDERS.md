@@ -93,10 +93,10 @@ Define your own slots in themes:
 
 ## Resources
 
-- [Custom Placeholders Example](../../examples/vanilla/custom-placeholders.html)
-- [Full Documentation](../../docs/src/pages/docs/en/custom-placeholders-guide.md)
-- [Slots Demo](../../examples/vanilla/slots-demo.html)
-- [MDN: Using Slots](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots)
+- [Custom Placeholders Example](./examples/vanilla/custom-placeholders.html) - Interactive examples in this repository
+- [Full Documentation](./docs/src/pages/docs/en/custom-placeholders-guide.md) - Comprehensive guide in this repository
+- [Slots Demo](./examples/vanilla/slots-demo.html) - Existing slots demonstration
+- [MDN: Using Slots](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_templates_and_slots) - Web platform documentation
 
 ## Creating Your Own Components with Slots
 
