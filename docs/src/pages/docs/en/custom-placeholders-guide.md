@@ -355,6 +355,7 @@ class MediaMuteButton extends MediaChromeButton {
 - [Custom Slots in Themes](./themes/custom-slots.md)
 - [Component Styling](./styling.mdx)
 - [Media Controller Slots](./components/media-controller.md)
+- [Custom Placeholders Example](/examples/vanilla/custom-placeholders.html)
 - [Slots Demo Example](/examples/vanilla/slots-demo.html)
 
 ## Further Reading
