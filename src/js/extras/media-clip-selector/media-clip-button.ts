@@ -47,8 +47,8 @@ const tooltipContent = /*html*/ `
  * @slot placeholder - A placeholder slot that can be filled with custom content from client-side applications (e.g., Svelte).
  *
  * @attr {string} mediaduration - (read-only) Set to the media duration.
- * @attr {string} clipStartTime - 
- * @attr {string} clipEndTime - 
+ * @attr {number} mediaclipstarttime - The start time of the media clip in seconds.
+ * @attr {number} mediaclipendtime - The end time of the media clip in seconds.
  *
  * @cssproperty [--media-clip-button-display = inline-flex] - `display` property of button.
  * @cssproperty --media-cliplive-button-icon-color - `fill` and `color` of not live button icon.
