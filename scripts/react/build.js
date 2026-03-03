@@ -260,7 +260,14 @@ const setupGlobalsAsync = async () => {
   const customElementNames = await import(
     path.join(projectRoot, 'dist', 'utils', 'server-safe-globals.js')
   ).then((exports) => {
-    Object.assign(globalThis, exports.globalThis);
+    const globals = exports.globalThis;
+    for (const key of Object.keys(globals)) {
+      try {
+        globalThis[key] = globals[key];
+      } catch (_) {
+        // Skip read-only globals (e.g. navigator in Node 22)
+      }
+    }
     globalThis.customElementNames = [];
     globalThis.customElements.define = (name, _classRef) =>
       globalThis.customElementNames.push(name);
