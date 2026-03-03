@@ -35,6 +35,7 @@ slotTemplate.innerHTML = /*html*/ `
   </style>
 
   <slot name="icon">${clipIcon}</slot>
+  <slot name="placeholder"></slot>
 `;
 
 const tooltipContent = /*html*/ `
@@ -42,6 +43,9 @@ const tooltipContent = /*html*/ `
 `;
 
 /**
+ * @slot icon - The icon element for the clip button.
+ * @slot placeholder - A placeholder slot that can be filled with custom content from client-side applications (e.g., Svelte).
+ *
  * @attr {string} mediaduration - (read-only) Set to the media duration.
  * @attr {string} clipStartTime - 
  * @attr {string} clipEndTime - 
