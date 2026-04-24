@@ -242,6 +242,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
   _dragStart: () => void;
   _dragEnd: () => void;
   _drag: () => void;
+  _suppressClick: boolean = false;
 
   constructor() {
     super();
@@ -373,6 +374,17 @@ class MediaClipSelector extends globalThis.HTMLElement {
   }
 
   dragEnd(): void {
+    // If we were actually dragging a handle, swallow the synthetic click
+    // event the browser fires right after mouseup so it doesn't seek the
+    // player to the handle's release position.
+    if (this.draggingEl) {
+      this._suppressClick = true;
+      // Safety net: clear the flag on the next tick in case the click
+      // never arrives (e.g. mouseup happened outside the wrapper).
+      globalThis.window?.setTimeout(() => {
+        this._suppressClick = false;
+      }, 0);
+    }
     this.initialX = null;
     this.draggingEl = null;
   }
@@ -516,6 +528,12 @@ class MediaClipSelector extends globalThis.HTMLElement {
   }
 
   handleClick(evt: MouseEvent): void {
+    // The click that fires immediately after a drag-mouseup should not seek.
+    if (this._suppressClick) {
+      this._suppressClick = false;
+      return;
+    }
+
     const mousePercent = this.getMousePercent(evt);
     const timestampForClick = mousePercent * this.mediaDuration;
 
