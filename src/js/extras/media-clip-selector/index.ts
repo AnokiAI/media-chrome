@@ -13,6 +13,7 @@ const Z = {
   100: 100,
   200: 200,
   300: 300,
+  999: 999,
 };
 
 function lockBetweenZeroAndOne(num: number): number {
@@ -68,10 +69,11 @@ template.innerHTML = `
 
     #selection {
       display: flex;
-      z-index: ${Z['200']};
+      z-index: ${Z['999']};
       width: 100%;
       height: 100%;
       align-items: center;
+      cursor: pointer;
     }
 
     #leftTrim {
@@ -81,7 +83,8 @@ template.innerHTML = `
     #spacer {
       flex: 1;
       background-color: cornflowerblue;
-      height: 40%;
+      height: 30%;
+      margin-top: -10px;
     }
 
     #wrapper {
@@ -448,7 +451,7 @@ class MediaClipSelector extends globalThis.HTMLElement {
     );
     this.setSelectionWidth(selectionFraction, fullTimelineWidth);
     this.dispatchUpdate();
-}
+  }
 
   updatePlayHandle(name: string, playHead: number): void {
     const rangeRect = this.wrapper.getBoundingClientRect();
