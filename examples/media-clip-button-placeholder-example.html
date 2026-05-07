@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Clip Button - Placeholder Slot Example</title>
+  <script type="module" src="../dist/extras/media-clip-selector/index.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    .example {
+      margin: 30px 0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    h2 {
+      margin-top: 0;
+      color: #555;
+    }
+    
+    media-clip-button {
+      margin: 10px;
+    }
+    
+    .custom-content {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+    
+    .custom-badge {
+      background-color: #ff5722;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Media Clip Button - Placeholder Slot Examples</h1>
+  
+  <div class="example">
+    <h2>Example 1: Default Button (No Placeholder)</h2>
+    <p>This shows the button without any custom content in the placeholder slot:</p>
+    <media-clip-button 
+      mediaclipstarttime="10" 
+      mediaclipendtime="30">
+    </media-clip-button>
+  </div>
+  
+  <div class="example">
+    <h2>Example 2: Button with Custom Text in Placeholder</h2>
+    <p>This demonstrates adding custom text content via the placeholder slot:</p>
+    <media-clip-button 
+      mediaclipstarttime="10" 
+      mediaclipendtime="30">
+      <span slot="placeholder" class="custom-content">Custom Label</span>
+    </media-clip-button>
+  </div>
+  
+  <div class="example">
+    <h2>Example 3: Button with Badge in Placeholder</h2>
+    <p>This shows how to add a badge or notification via the placeholder slot:</p>
+    <media-clip-button 
+      mediaclipstarttime="10" 
+      mediaclipendtime="30">
+      <span slot="placeholder" class="custom-badge">NEW</span>
+    </media-clip-button>
+  </div>
+  
+  <div class="example">
+    <h2>Example 4: Multiple Custom Elements</h2>
+    <p>You can add multiple elements to the placeholder slot:</p>
+    <media-clip-button 
+      mediaclipstarttime="10" 
+      mediaclipendtime="30">
+      <div slot="placeholder">
+        <span class="custom-content">10s - 30s</span>
+        <span class="custom-badge">!</span>
+      </div>
+    </media-clip-button>
+  </div>
+  
+  <div class="example">
+    <h2>How to Use in Svelte</h2>
+    <p>In a Svelte application, you can use the placeholder slot like this:</p>
+    <pre><code>&lt;script&gt;
+  import '@AnokiAI/media-chrome/extras/media-clip-selector';
+  
+  let customText = 'Dynamic Content';
+&lt;/script&gt;
+
+&lt;media-clip-button 
+  mediaclipstarttime={10} 
+  mediaclipendtime={30}&gt;
+  &lt;span slot="placeholder" class="custom-content"&gt;
+    {customText}
+  &lt;/span&gt;
+&lt;/media-clip-button&gt;</code></pre>
+  </div>
+  
+  <script>
+    // Example of dynamically updating placeholder content
+    const buttons = document.querySelectorAll('media-clip-button');
+    console.log(`Found ${buttons.length} media-clip-button elements`);
+    
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', (e) => {
+        console.log(`Button ${index + 1} clicked`, {
+          startTime: button.clipStartTime,
+          endTime: button.clipEndTime
+        });
+      });
+    });
+  </script>
+</body>
+</html>
