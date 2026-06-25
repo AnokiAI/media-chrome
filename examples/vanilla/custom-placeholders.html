@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Custom Placeholders Example</title>
+    <script type="module" src="../../dist/index.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      h1 {
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+      }
+
+      h2 {
+        color: #555;
+        margin-top: 30px;
+      }
+
+      .example-container {
+        background: white;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .description {
+        color: #666;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #007bff;
+      }
+
+      media-controller:not([audio]) {
+        display: block;
+        max-width: 720px;
+        aspect-ratio: 16 / 9;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      /* Example 1: Text-based icons */
+      .text-icons [slot="play"],
+      .text-icons [slot="pause"] {
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      }
+
+      /* Example 2: Emoji icons */
+      .emoji-icons [slot] {
+        font-size: 24px;
+      }
+
+      /* Example 3: Animated icon */
+      .animated-icon {
+        display: inline-block;
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+
+      media-play-button[mediapaused] .animated-icon {
+        transform: scale(1.1);
+        color: #28a745;
+      }
+
+      media-play-button:not([mediapaused]) .animated-icon {
+        transform: rotate(0deg);
+        color: #dc3545;
+      }
+
+      /* Example 4: Custom SVG with gradient */
+      .custom-svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .gradient-play { fill: url(#playGradient); }
+      .gradient-pause { fill: url(#pauseGradient); }
+
+      /* Example 5: Volume icons */
+      .volume-emoji [slot] {
+        font-size: 20px;
+      }
+
+      /* Example 6: Themed buttons */
+      .themed media-control-bar {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      }
+
+      .themed media-play-button {
+        --media-control-background: rgba(220, 53, 69, 0.9);
+        --media-control-hover-background: rgba(220, 53, 69, 1);
+      }
+
+      .themed media-mute-button {
+        --media-control-background: rgba(40, 167, 69, 0.9);
+        --media-control-hover-background: rgba(40, 167, 69, 1);
+      }
+
+      .themed [slot] {
+        color: white;
+        font-weight: bold;
+      }
+
+      /* Code display */
+      pre {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        border: 1px solid #dee2e6;
+      }
+
+      code {
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+      }
+
+      .toggle-code {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+
+      .toggle-code:hover {
+        background: #0056b3;
+      }
+
+      .code-block {
+        display: none;
+      }
+
+      .code-block.visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🎨 Custom Placeholders (Slots) Examples</h1>
+    <p style="color: #666; font-size: 16px;">
+      This page demonstrates how to use custom placeholders (slots) to customize Media Chrome components.
+      All examples use the same video source but different slot customizations.
+    </p>
+
+    <!-- Example 1: Text-based Icons -->
+    <div class="example-container">
+      <h2>1. Text-based Icons</h2>
+      <div class="description">
+        Replace default SVG icons with simple text using the <code>play</code> and <code>pause</code> slots.
+      </div>
+      
+      <media-controller class="text-icons">
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <span slot="play">▶ PLAY</span>
+            <span slot="pause">⏸ PAUSE</span>
+          </media-play-button>
+          <media-time-range></media-time-range>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code1')">Show Code</button>
+      <div id="code1" class="code-block">
+        <pre><code>&lt;media-play-button&gt;
+  &lt;span slot="play"&gt;▶ PLAY&lt;/span&gt;
+  &lt;span slot="pause"&gt;⏸ PAUSE&lt;/span&gt;
+&lt;/media-play-button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Example 2: Emoji Icons -->
+    <div class="example-container">
+      <h2>2. Emoji Icons</h2>
+      <div class="description">
+        Use emojis for a fun, colorful look. Works great for casual or playful interfaces.
+      </div>
+      
+      <media-controller class="emoji-icons">
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <span slot="play">▶️</span>
+            <span slot="pause">⏸️</span>
+          </media-play-button>
+          <media-mute-button>
+            <span slot="high">🔊</span>
+            <span slot="medium">🔉</span>
+            <span slot="low">🔈</span>
+            <span slot="off">🔇</span>
+          </media-mute-button>
+          <media-time-range></media-time-range>
+          <media-fullscreen-button>
+            <span slot="enter">⛶</span>
+            <span slot="exit">⊗</span>
+          </media-fullscreen-button>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code2')">Show Code</button>
+      <div id="code2" class="code-block">
+        <pre><code>&lt;media-play-button&gt;
+  &lt;span slot="play"&gt;▶️&lt;/span&gt;
+  &lt;span slot="pause"&gt;⏸️&lt;/span&gt;
+&lt;/media-play-button&gt;
+
+&lt;media-mute-button&gt;
+  &lt;span slot="high"&gt;🔊&lt;/span&gt;
+  &lt;span slot="medium"&gt;🔉&lt;/span&gt;
+  &lt;span slot="low"&gt;🔈&lt;/span&gt;
+  &lt;span slot="off"&gt;🔇&lt;/span&gt;
+&lt;/media-mute-button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Example 3: Single Animated Icon -->
+    <div class="example-container">
+      <h2>3. Single Animated Icon</h2>
+      <div class="description">
+        Use the <code>icon</code> slot to create a single element that transitions between states.
+        This example changes color and scales based on play/pause state.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <span class="animated-icon" slot="icon">
+              <span>⏯</span>
+            </span>
+          </media-play-button>
+          <media-time-range></media-time-range>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code3')">Show Code</button>
+      <div id="code3" class="code-block">
+        <pre><code>&lt;media-play-button&gt;
+  &lt;span class="animated-icon" slot="icon"&gt;
+    &lt;span&gt;⏯&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/media-play-button&gt;
+
+&lt;style&gt;
+.animated-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+media-play-button[mediapaused] .animated-icon {
+  transform: scale(1.1);
+  color: #28a745;
+}
+&lt;/style&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Example 4: Custom SVG with Gradients -->
+    <div class="example-container">
+      <h2>4. Custom SVG with Gradients</h2>
+      <div class="description">
+        Create beautiful custom SVG icons with gradients and effects.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <svg slot="play" class="custom-svg" viewBox="0 0 24 24">
+              <defs>
+                <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#28a745;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#20c997;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <path class="gradient-play" d="m6 21 15-9L6 3v18Z"/>
+            </svg>
+            <svg slot="pause" class="custom-svg" viewBox="0 0 24 24">
+              <defs>
+                <linearGradient id="pauseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#dc3545;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#c82333;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <path class="gradient-pause" d="M6 20h4V4H6v16Zm8-16v16h4V4h-4Z"/>
+            </svg>
+          </media-play-button>
+          <media-time-range></media-time-range>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code4')">Show Code</button>
+      <div id="code4" class="code-block">
+        <pre><code>&lt;media-play-button&gt;
+  &lt;svg slot="play" viewBox="0 0 24 24"&gt;
+    &lt;defs&gt;
+      &lt;linearGradient id="playGradient"&gt;
+        &lt;stop offset="0%" style="stop-color:#28a745" /&gt;
+        &lt;stop offset="100%" style="stop-color:#20c997" /&gt;
+      &lt;/linearGradient&gt;
+    &lt;/defs&gt;
+    &lt;path fill="url(#playGradient)" d="m6 21 15-9L6 3v18Z"/&gt;
+  &lt;/svg&gt;
+  &lt;!-- Similar for pause --&gt;
+&lt;/media-play-button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Example 5: Image-based Icons -->
+    <div class="example-container">
+      <h2>5. Image-based Icons</h2>
+      <div class="description">
+        Use custom image files for icons. Great for branded experiences.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <img 
+              slot="play" 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2328a745'%3E%3Cpath d='m6 21 15-9L6 3v18Z'/%3E%3C/svg%3E"
+              alt="Play"
+              style="width: 100%; height: 100%;"
+            />
+            <img 
+              slot="pause" 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'%3E%3Cpath d='M6 20h4V4H6v16Zm8-16v16h4V4h-4Z'/%3E%3C/svg%3E"
+              alt="Pause"
+              style="width: 100%; height: 100%;"
+            />
+          </media-play-button>
+          <media-time-range></media-time-range>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code5')">Show Code</button>
+      <div id="code5" class="code-block">
+        <pre><code>&lt;media-play-button&gt;
+  &lt;img slot="play" src="play-icon.png" alt="Play" /&gt;
+  &lt;img slot="pause" src="pause-icon.png" alt="Pause" /&gt;
+&lt;/media-play-button&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Example 6: Themed Player with Multiple Custom Slots -->
+    <div class="example-container">
+      <h2>6. Complete Themed Player</h2>
+      <div class="description">
+        Combine custom slots with CSS variables for a fully branded player experience.
+      </div>
+      
+      <media-controller class="themed">
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <strong slot="play">PLAY ▶</strong>
+            <strong slot="pause">PAUSE ⏸</strong>
+          </media-play-button>
+          <media-time-display></media-time-display>
+          <media-time-range></media-time-range>
+          <media-mute-button>
+            <strong slot="high">VOL 🔊</strong>
+            <strong slot="medium">VOL 🔉</strong>
+            <strong slot="low">VOL 🔈</strong>
+            <strong slot="off">MUTE 🔇</strong>
+          </media-mute-button>
+          <media-fullscreen-button>
+            <strong slot="enter">FULL</strong>
+            <strong slot="exit">EXIT</strong>
+          </media-fullscreen-button>
+        </media-control-bar>
+      </media-controller>
+
+      <button class="toggle-code" onclick="toggleCode('code6')">Show Code</button>
+      <div id="code6" class="code-block">
+        <pre><code>&lt;media-controller class="themed"&gt;
+  &lt;video slot="media" src="video.mp4"&gt;&lt;/video&gt;
+  &lt;media-control-bar&gt;
+    &lt;media-play-button&gt;
+      &lt;strong slot="play"&gt;PLAY ▶&lt;/strong&gt;
+      &lt;strong slot="pause"&gt;PAUSE ⏸&lt;/strong&gt;
+    &lt;/media-play-button&gt;
+    &lt;!-- other controls with custom slots --&gt;
+  &lt;/media-control-bar&gt;
+&lt;/media-controller&gt;
+
+&lt;style&gt;
+.themed media-play-button {
+  --media-control-background: rgba(220, 53, 69, 0.9);
+  --media-control-hover-background: rgba(220, 53, 69, 1);
+}
+&lt;/style&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Key Concepts Section -->
+    <div class="example-container">
+      <h2>📚 Key Concepts</h2>
+      <div style="color: #666; line-height: 1.6;">
+        <h3>Understanding Slots</h3>
+        <ul>
+          <li><strong>Named Slots:</strong> Components define slots like <code>slot="play"</code> that you can fill with custom content</li>
+          <li><strong>Hierarchical Slots:</strong> Some components offer both general slots (like <code>icon</code>) and specific slots (like <code>play</code> and <code>pause</code>)</li>
+          <li><strong>Light DOM Styling:</strong> Your slotted content stays in the page's DOM, so your CSS can style it directly</li>
+          <li><strong>State-based Display:</strong> Components automatically show/hide slots based on media state (playing, paused, volume level, etc.)</li>
+        </ul>
+
+        <h3>Available Slots by Component</h3>
+        <ul>
+          <li><strong>&lt;media-play-button&gt;:</strong> <code>icon</code>, <code>play</code>, <code>pause</code></li>
+          <li><strong>&lt;media-mute-button&gt;:</strong> <code>icon</code>, <code>high</code>, <code>medium</code>, <code>low</code>, <code>off</code></li>
+          <li><strong>&lt;media-fullscreen-button&gt;:</strong> <code>icon</code>, <code>enter</code>, <code>exit</code></li>
+          <li><strong>&lt;media-seek-forward-button&gt;:</strong> <code>icon</code>, <code>forward</code></li>
+          <li><strong>&lt;media-seek-backward-button&gt;:</strong> <code>icon</code>, <code>backward</code></li>
+        </ul>
+        <p><em>Check each component's documentation for a complete list of available slots.</em></p>
+
+        <h3>Tips for Success</h3>
+        <ul>
+          <li>Always provide accessible alternatives (alt text, aria-labels) when using custom content</li>
+          <li>Test your custom slots in all relevant states (playing, paused, muted, etc.)</li>
+          <li>Keep accessibility in mind - ensure sufficient color contrast and clickable areas</li>
+          <li>Use semantic HTML elements when possible</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      function toggleCode(id) {
+        const codeBlock = document.getElementById(id);
+        codeBlock.classList.toggle('visible');
+        const button = event.target;
+        button.textContent = codeBlock.classList.contains('visible') ? 'Hide Code' : 'Show Code';
+      }
+    </script>
+  </body>
+</html>
