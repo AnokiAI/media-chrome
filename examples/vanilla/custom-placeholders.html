@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Media Chrome - Custom Placeholders/Slots Example</title>
+    <script type="module" src="../../dist/index.js"></script>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      .example-section {
+        background: white;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .example-section h2 {
+        color: #555;
+        margin-top: 0;
+      }
+
+      .description {
+        background: #f9f9f9;
+        padding: 15px;
+        border-left: 4px solid #4CAF50;
+        margin: 15px 0;
+      }
+
+      /** add styles to prevent CLS (Cumulative Layout Shift) */
+      media-controller:not([audio]) {
+        display: block;
+        max-width: 720px;
+        aspect-ratio: 16 / 9;
+        margin: 20px 0;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      /* Custom styles for overridden content */
+      .custom-play-text {
+        font-weight: bold;
+        font-size: 18px;
+        color: #4CAF50;
+      }
+
+      .custom-pause-text {
+        font-weight: bold;
+        font-size: 18px;
+        color: #f44336;
+      }
+
+      .custom-icon {
+        width: 32px;
+        height: 32px;
+        fill: currentColor;
+      }
+
+      .watermark {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        pointer-events: none;
+      }
+
+      .custom-overlay {
+        position: absolute;
+        bottom: 60px;
+        left: 10px;
+        background: rgba(76, 175, 80, 0.9);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Custom Placeholders/Slots in Media Chrome</h1>
+    
+    <p>
+      This example demonstrates how Media Chrome components expose slots (placeholders) 
+      that clients can override with custom content. This is a powerful pattern that allows 
+      you to customize components while maintaining their functionality.
+    </p>
+
+    <!-- Example 1: Default Component -->
+    <div class="example-section">
+      <h2>Example 1: Default Play Button</h2>
+      <div class="description">
+        <strong>Pattern:</strong> Using the component without overriding any slots.<br>
+        <strong>Result:</strong> The default icons provided by media-chrome are displayed.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          playsinline
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button></media-play-button>
+          <media-time-range></media-time-range>
+          <media-time-display></media-time-display>
+        </media-control-bar>
+      </media-controller>
+    </div>
+
+    <!-- Example 2: Custom Text Placeholders -->
+    <div class="example-section">
+      <h2>Example 2: Override with Custom Text</h2>
+      <div class="description">
+        <strong>Pattern:</strong> Override the <code>play</code> and <code>pause</code> slots with custom text.<br>
+        <strong>Result:</strong> Text labels replace the default icons.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          playsinline
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <span slot="play" class="custom-play-text">▶ Start</span>
+            <span slot="pause" class="custom-pause-text">⏸ Stop</span>
+          </media-play-button>
+          <media-time-range></media-time-range>
+          <media-time-display></media-time-display>
+        </media-control-bar>
+      </media-controller>
+    </div>
+
+    <!-- Example 3: Custom SVG Icons -->
+    <div class="example-section">
+      <h2>Example 3: Override with Custom SVG Icons</h2>
+      <div class="description">
+        <strong>Pattern:</strong> Replace default icons with custom SVG graphics.<br>
+        <strong>Result:</strong> Your own icon set is used instead of the defaults.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          playsinline
+          muted
+          crossorigin
+        ></video>
+        <media-control-bar>
+          <media-play-button>
+            <!-- Custom Play Icon -->
+            <svg slot="play" class="custom-icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
+              <path d="M10 8l6 4-6 4V8z" fill="white"/>
+            </svg>
+            <!-- Custom Pause Icon -->
+            <svg slot="pause" class="custom-icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="#f44336"/>
+              <rect x="9" y="7" width="2" height="10" fill="white"/>
+              <rect x="13" y="7" width="2" height="10" fill="white"/>
+            </svg>
+          </media-play-button>
+          <media-mute-button></media-mute-button>
+          <media-time-range></media-time-range>
+          <media-fullscreen-button></media-fullscreen-button>
+        </media-control-bar>
+      </media-controller>
+    </div>
+
+    <!-- Example 4: Custom Slots in Themes -->
+    <div class="example-section">
+      <h2>Example 4: Custom Slots in Themes</h2>
+      <div class="description">
+        <strong>Pattern:</strong> Define custom slots in a theme that clients can fill.<br>
+        <strong>Result:</strong> Clients can inject custom content (watermarks, CTAs, etc.) into your theme.
+      </div>
+      
+      <template id="custom-theme-with-slots">
+        <media-controller>
+          <!-- Forward the media slot -->
+          <slot name="media" slot="media"></slot>
+          
+          <!-- Custom slot for watermark - clients can override this -->
+          <slot name="watermark" slot="centered-chrome">
+            <div class="watermark">Default Watermark</div>
+          </slot>
+          
+          <!-- Custom slot for promotional content -->
+          <slot name="promo" slot="top-chrome"></slot>
+          
+          <!-- Standard controls -->
+          <media-control-bar>
+            <media-play-button></media-play-button>
+            <media-time-range></media-time-range>
+            <media-time-display showduration></media-time-display>
+            <media-mute-button></media-mute-button>
+            <media-fullscreen-button></media-fullscreen-button>
+          </media-control-bar>
+        </media-controller>
+      </template>
+
+      <media-theme template="custom-theme-with-slots">
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          playsinline
+          muted
+          crossorigin
+        ></video>
+        <!-- Client overrides the watermark slot -->
+        <div slot="watermark" class="watermark">© 2024 My Brand</div>
+        <!-- Client adds custom promotional content -->
+        <div slot="promo" class="custom-overlay">
+          🎉 Special Offer: Get 50% Off!
+        </div>
+      </media-theme>
+    </div>
+
+    <!-- Example 5: Poster Image with Placeholder -->
+    <div class="example-section">
+      <h2>Example 5: Poster Image with Placeholder</h2>
+      <div class="description">
+        <strong>Pattern:</strong> Use <code>placeholdersrc</code> for blur hash while main poster loads.<br>
+        <strong>Result:</strong> Smooth loading experience with placeholder → poster → video.
+      </div>
+      
+      <media-controller>
+        <video
+          slot="media"
+          src="https://stream.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/low.mp4"
+          playsinline
+          muted
+          crossorigin
+        ></video>
+        <media-poster-image
+          slot="poster"
+          src="https://image.mux.com/A3VXy02VoUinw01pwyomEO3bHnG4P32xzV7u1j1FSzjNg/thumbnail.jpg?time=20"
+          placeholdersrc="data:image/jpeg;base64,/9j/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAcADIDASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAABQABAgQGBwP/xAAtEAABBAECBAUEAgMAAAAAAAABAgMEEQUAIQYSMXETIkFRYQcjgZEUFRYy4f/EABcBAQEBAQAAAAAAAAAAAAAAAAQDBQD/xAArEQACAQIDBAsBAAAAAAAAAAABAgADEQQSMQUTkfAUISJBQlFhcaGx4fH/2gAMAwEAAhEDEQA/ABbGBzcOGqRNxL6KTzONFs2D13Hqe13oRNwLC0uSUyFofuywpsharF7X31oMdh3YrjoOXnSpKgQmQ62Qtnb/AGFrNdzv7au4HFQWkxMvNcfXElNEMusoDaC2gkFayokqWaPv10GnXa9h8fskmzF3RNRu16TluVkSocJtt2K4lBcUtpZ2JWmht2sXoR/fSXnluzCp0qVZsmtG0ZkSs8+hhK5r/iKbajODmHKSQAN7J6VyjvrX8X4TC4qHEfkCKh9LaFSoy6SkOCuZBIFK9jRG96Xi3CNkPX7TqGzxUW/3OcSZ8Z0K8JSkE+gG2malhSfM46VdLKTR/wC6sPMNRsuiPFX4CJCylt9y+QJJomgkmiPzo0/ORiHGHWop8BaPtTHwpKFOJVXlKxRqtx1G+hZSXCAawzYfLpPaPwjlnWG3QyulpCt6HUfJ0tQ/r4yt3ONMZzndX2nDv671vpad0en5SWUQNA4tlGVIjCaWo7gNtyLcJ+LHQ/PxrRP5rO5FiNFbkunEtAR48cfbShNUkUAf3vrc5r6ecJrxLTzWMTHKGXF00a5iOarJs+g9dZE4qFDREnxW1NOjFMyCkLPKpwrAJI/OsZcQgAKDW44fya1DEeA6k6x8RjOHcdnYklcBMRaUh+U6mYlxQ5DzKVSVbJ2GxF7aGZudgcpxE/KxqnFwaSlQW4Qh1V9CSdwAPjc6OZLh/G/5hiogQ6kT47a3XEuEKBULITWwHxWofUdjHcPyEsxcNjX+Qp5lvsWXLTvzUQP0Bq1PEqQARcmMeky3I7pWeLDmPUXGsehYtLchHmVZ9rI7UB31DE4Oc2+Jq3HnWikK8LwkOtvUTy7b11Pp+tCk42I1BjyWWy0t5XmCSaHa+mjWTyM3H8PRJQe/klThTyPpBSK9RQBv86qaTMLqeMNvEDAMITREHIL4QwyjW5Ug2e/zpasR8xJLDZLTG6R6H276Wi2bkmJzryBP/9k="
+        ></media-poster-image>
+        <media-control-bar>
+          <media-play-button></media-play-button>
+          <media-time-range></media-time-range>
+          <media-time-display showduration></media-time-display>
+        </media-control-bar>
+      </media-controller>
+    </div>
+
+    <div class="example-section">
+      <h2>Key Concepts</h2>
+      <ul>
+        <li>
+          <strong>Slots are Placeholders:</strong> Components expose named slots that act as 
+          placeholders for content. If you don't provide content, the default is used.
+        </li>
+        <li>
+          <strong>Override by Name:</strong> To override, add an element with 
+          <code>slot="slot-name"</code> as a child of the component.
+        </li>
+        <li>
+          <strong>Shadow DOM:</strong> Slots work with the Shadow DOM, allowing components 
+          to encapsulate their implementation while exposing customization points.
+        </li>
+        <li>
+          <strong>Multiple Slots:</strong> Components can expose multiple slots for different 
+          parts (e.g., play icon, pause icon, tooltip).
+        </li>
+        <li>
+          <strong>Custom Themes:</strong> When building themes, you can define your own custom 
+          slots that clients can fill with their content.
+        </li>
+      </ul>
+    </div>
+
+    <div class="example-section">
+      <h2>How It Works</h2>
+      <ol>
+        <li>
+          <strong>Define Component:</strong> Media Chrome components are defined with slots in 
+          their shadow DOM. For example, <code>media-play-button</code> has 
+          <code>&lt;slot name="play"&gt;</code> and <code>&lt;slot name="pause"&gt;</code>.
+        </li>
+        <li>
+          <strong>Export for Clients:</strong> Components are exported as web components that 
+          clients can use in their HTML.
+        </li>
+        <li>
+          <strong>Client Integration:</strong> Clients import the component and use it in their 
+          markup. They can optionally override slots by providing elements with 
+          <code>slot="slot-name"</code> attributes.
+        </li>
+        <li>
+          <strong>Rendering:</strong> The browser's slot mechanism projects the client's content 
+          into the component's shadow DOM at the appropriate slot location.
+        </li>
+      </ol>
+    </div>
+
+    <div class="example-section">
+      <h2>Common Slots in Media Chrome Components</h2>
+      <ul>
+        <li><code>media-play-button</code>: <code>play</code>, <code>pause</code>, <code>icon</code></li>
+        <li><code>media-mute-button</code>: <code>mute</code>, <code>unmute</code>, <code>icon</code></li>
+        <li><code>media-fullscreen-button</code>: <code>enter</code>, <code>exit</code>, <code>icon</code></li>
+        <li><code>media-controller</code>: <code>media</code>, <code>poster</code>, <code>centered-chrome</code>, <code>top-chrome</code>, <code>middle-chrome</code></li>
+        <li><code>media-theme</code>: Custom slots you define in your template</li>
+      </ul>
+    </div>
+  </body>
+</html>

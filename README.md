@@ -123,3 +123,4 @@ Web components. @heff spoke about [the potential of web components for video](ht
 
 - [Design Principles](https://www.media-chrome.org/docs/en/design-principles)
 - [Architecture](https://www.media-chrome.org/docs/en/architecture)
+- [Custom Placeholders Guide](./CUSTOM_PLACEHOLDERS.md) - Learn how to override component defaults with custom content
